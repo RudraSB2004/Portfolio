@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: #000;
+}
+
+body {
+  @apply text-white font-sans;
+}
+
+/* Animated Neon Grid Background */
+.bg-grid {
+  background-image:
+    radial-gradient(800px 400px at 70% -10%, rgba(34,211,238,0.12), transparent 70%),
+    radial-gradient(1000px 500px at 10% -10%, rgba(167,139,250,0.12), transparent 70%),
+    radial-gradient(2000px 1000px at 50% 120%, rgba(255,255,255,0.08), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  background-color: #000;
+  animation: gridFloat 20s linear infinite;
+}
+
+@keyframes gridFloat {
+  0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
+  100% { background-position: 50px 50px, -50px -50px, 25px 25px, 40px 40px, -40px -40px; }
+}
+
+/* Glassmorphism */
+.glass {
+  @apply bg-black/70 backdrop-blur-lg border border-white/10 rounded-2xl shadow-lg;
+}
+
+/* Hover effect for cards/buttons */
+.hover-pop {
+  @apply transition-transform duration-300 hover:-translate-y-0.5 hover:scale-[1.02];
+}
+
+/* Smooth Background Shift */
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-bgMove {
+  background-size: 400% 400%;
+  animation: bgMove 12s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 60s linear infinite;
+}

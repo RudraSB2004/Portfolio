@@ -41,8 +41,8 @@ export default function ThreeHero() {
     // === animated neon grid floor (shader) ===
     const gridUniforms = {
       uTime: { value: 0 },
-      uColorA: { value: new THREE.Color("#22d3ee") }, // cyan
-      uColorB: { value: new THREE.Color("#a78bfa") }, // violet
+      uColorA: { value: new THREE.Color("#22d3ee") },
+      uColorB: { value: new THREE.Color("#a78bfa") },
     };
 
     const gridMat = new THREE.ShaderMaterial({
@@ -62,28 +62,21 @@ export default function ThreeHero() {
         uniform vec3 uColorA;
         uniform vec3 uColorB;
 
-        // draw glowing grid lines
         float gridLine(float v, float thickness) {
           float g = abs(fract(v) - 0.5);
           return smoothstep(thickness, 0.0, g);
         }
 
         void main() {
-          // uv scaling to make a big grid
           vec2 uv = vUv * 40.0;
-
-          // scrolling effect
           uv.y += uTime * 0.8;
 
-          // two directions (x and y) lines
           float gx = gridLine(uv.x, 0.05);
           float gy = gridLine(uv.y, 0.05);
 
-          // combine and add glow falloff
           float g = max(gx, gy);
           float glow = g * 0.75;
 
-          // gradient tint up->down
           float fade = smoothstep(0.0, 1.0, vUv.y);
 
           vec3 base = mix(uColorA, uColorB, vUv.x);
@@ -102,11 +95,10 @@ export default function ThreeHero() {
     grid.position.y = -1.2;
     scene.add(grid);
 
-    // === holographic laptop (custom geometry) ===
+    // === holographic laptop ===
     const laptopGroup = new THREE.Group();
     scene.add(laptopGroup);
 
-    // base (keyboard part)
     const base = new THREE.Mesh(
       new THREE.BoxGeometry(1.8, 0.08, 1.1),
       new THREE.MeshStandardMaterial({
@@ -118,7 +110,6 @@ export default function ThreeHero() {
     base.position.set(0, -0.6, 0);
     laptopGroup.add(base);
 
-    // glowing edge on base
     const baseEdge = new THREE.Mesh(
       new THREE.BoxGeometry(1.82, 0.01, 1.12),
       new THREE.MeshBasicMaterial({ color: 0x22d3ee })
@@ -126,7 +117,6 @@ export default function ThreeHero() {
     baseEdge.position.set(0, -0.56, 0);
     laptopGroup.add(baseEdge);
 
-    // screen hinge
     const hinge = new THREE.Mesh(
       new THREE.CylinderGeometry(0.03, 0.03, 1.7, 24),
       new THREE.MeshStandardMaterial({
@@ -139,7 +129,6 @@ export default function ThreeHero() {
     hinge.position.set(0, -0.56, -0.52);
     laptopGroup.add(hinge);
 
-    // screen body
     const screen = new THREE.Mesh(
       new THREE.BoxGeometry(1.8, 1.1, 0.06),
       new THREE.MeshStandardMaterial({
@@ -151,7 +140,6 @@ export default function ThreeHero() {
     screen.position.set(0, 0, -0.52);
     laptopGroup.add(screen);
 
-    // screen glow border
     const screenEdge = new THREE.Mesh(
       new THREE.BoxGeometry(1.82, 1.12, 0.005),
       new THREE.MeshBasicMaterial({ color: 0x60a5fa })
@@ -159,7 +147,6 @@ export default function ThreeHero() {
     screenEdge.position.copy(screen.position);
     laptopGroup.add(screenEdge);
 
-    // === dynamic code canvas texture for the screen ===
     const codeCanvas = document.createElement("canvas");
     codeCanvas.width = 512;
     codeCanvas.height = 320;
@@ -180,7 +167,6 @@ export default function ThreeHero() {
     screenPlane.position.set(0, 0, -0.49);
     laptopGroup.add(screenPlane);
 
-    // code typing effect
     const codeLines = [
       "const dev = 'Rudra Shankar Biswas';",
       "const stack = ['React', 'Node', 'SQL', 'MongoDB', 'AWS', 'Microservices'];",
@@ -197,7 +183,6 @@ export default function ThreeHero() {
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, codeCanvas.width, codeCanvas.height);
 
-      // subtle scanline
       const h = codeCanvas.height;
       const w = codeCanvas.width;
       ctx.globalAlpha = 0.05;
@@ -207,7 +192,6 @@ export default function ThreeHero() {
       }
       ctx.globalAlpha = 1;
 
-      // typing effect
       const target = codeLines[lineIndex] || "";
       currentText += target.charAt(charIndex++);
       if (charIndex > target.length) {
@@ -216,7 +200,7 @@ export default function ThreeHero() {
         charIndex = 0;
       }
 
-      const shown = currentText.split("\n").slice(-8); // last few lines
+      const shown = currentText.split("\n").slice(-8);
       ctx.font = "20px monospace";
       ctx.fillStyle = "#00ffcc";
       ctx.shadowColor = "#00ffff";
@@ -226,7 +210,6 @@ export default function ThreeHero() {
         ctx.fillText(line, 14, 40 + i * 32);
       });
 
-      // blinking cursor
       if (Math.floor(Date.now() / 500) % 2 === 0) {
         const cursorX =
           14 + ctx.measureText(shown[shown.length - 1] || "").width;
@@ -237,7 +220,7 @@ export default function ThreeHero() {
       codeTexture.needsUpdate = true;
     }
 
-    // === orbiting data cubes ===
+    // === orbiting cubes ===
     const cubeGroup = new THREE.Group();
     scene.add(cubeGroup);
 
@@ -269,7 +252,7 @@ export default function ThreeHero() {
       cubeGroup.add(cube);
     }
 
-    // === particle field ===
+    // === particles ===
     const particleCount = 700;
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
@@ -293,6 +276,16 @@ export default function ThreeHero() {
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
+    // === mouse tracking for whole laptop rotation ===
+    let mouseX = 0;
+    let mouseY = 0;
+    function onPointerMove(e) {
+      const rect = container.getBoundingClientRect();
+      mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    }
+    window.addEventListener("pointermove", onPointerMove);
+
     // === animation loop ===
     let rafId;
     const clock = new THREE.Clock();
@@ -301,17 +294,24 @@ export default function ThreeHero() {
       rafId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // camera slow orbit
-      const radius = 4;
-      camera.position.x = Math.sin(t * 0.15) * radius;
-      camera.position.z = Math.cos(t * 0.15) * radius;
-      camera.position.y = 1.2 + Math.sin(t * 0.25) * 0.1;
-      camera.lookAt(0, -0.2, -0.2);
+      // fixed camera
+      camera.position.set(0, 1.4, 4);
+      camera.lookAt(0, 0, 0);
 
-      // grid scroll
+      // rotate whole laptop toward mouse
+      laptopGroup.rotation.x = THREE.MathUtils.lerp(
+        laptopGroup.rotation.x,
+        mouseY * 0.4,
+        0.1
+      );
+      laptopGroup.rotation.y = THREE.MathUtils.lerp(
+        laptopGroup.rotation.y,
+        mouseX * 0.4,
+        0.1
+      );
+
       gridUniforms.uTime.value = t;
 
-      // orbiting cubes
       cubes.forEach((cube) => {
         const d = cube.userData;
         d.angle += d.speed * 0.01;
@@ -323,7 +323,6 @@ export default function ThreeHero() {
         cube.rotation.y += 0.012;
       });
 
-      // typing update (slower)
       if (Math.floor(t * 8) % 2 === 0) drawCodeToCanvas();
 
       renderer.render(scene, camera);
@@ -343,6 +342,7 @@ export default function ThreeHero() {
     // === cleanup ===
     return () => {
       cancelAnimationFrame(rafId);
+      window.removeEventListener("pointermove", onPointerMove);
       resizeObserver.disconnect();
       container.removeChild(renderer.domElement);
       renderer.dispose();
@@ -366,7 +366,6 @@ export default function ThreeHero() {
 
   return (
     <div ref={mountRef} className="absolute inset-0 -z-10 pointer-events-none">
-      {/* gradient veil for readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/80" />
     </div>
   );

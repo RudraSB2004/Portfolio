@@ -3,6 +3,7 @@ import AnimatedText from "./AnimatedText";
 import ThreeHero from "./ThreeHero";
 import { FaFileAlt } from "react-icons/fa";
 import { ReactTyped as Typed } from "react-typed"; // ✅ named import for Vite
+import { Link } from "react-router-dom";
 
 const PROFILE =
   "https://media.licdn.com/dms/image/v2/D5603AQFYHrISm7Gwzg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1730410992097?e=1758153600&v=beta&t=_Epk2-xoFJMCKAyYIVn6qRaF5c-_EDnohecRw2EZTBo";
@@ -28,21 +29,22 @@ export default function Hero() {
             />
           </div>
 
-          {/* Description */}
-          <p className="mt-4 text-gray-300 text-lg">
-            I build modern, performant, and beautiful web apps. 4th-year ECE
-            student from Kolkata, India. Skilled in React, Node.js, SQL,
-            MongoDB, AWS, and Microservices.
+          {/* Shorter & clearer description */}
+          <p className="mt-4 text-gray-300 text-lg leading-relaxed">
+            Final-year ECE student from Kolkata with expertise in React,
+            Node.js, SQL, MongoDB, AWS, and microservices. I create fast,
+            scalable, and user-focused web applications that deliver real-world
+            impact.
           </p>
 
           {/* Buttons */}
           <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="/projects"
+            <Link
+              to="/projects"
               className="px-6 py-3 rounded-xl bg-cyan-400 text-black font-semibold hover:brightness-110 hover-pop"
             >
               View Projects
-            </a>
+            </Link>
             <a
               href="https://drive.google.com/file/d/1jhVZTiYqIUsSTZNUBRgt6mFoIG3EYjYK/view?usp=sharing"
               className="px-6 py-3 rounded-xl border border-cyan-400/60 text-cyan-300 hover:bg-cyan-400/10 hover-pop"

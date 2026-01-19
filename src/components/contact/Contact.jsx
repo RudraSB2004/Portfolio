@@ -36,6 +36,7 @@ export default function Contact() {
             <span>📨 861 Submissions (1 year)</span>
           </div>
         </div>
+
         <h2 className="text-4xl font-bold mb-4 text-cyan-400 tracking-tight mt-10">
           Get in Touch
         </h2>
@@ -47,7 +48,9 @@ export default function Contact() {
 
         {/* Email */}
         <a
-          href="mailto:rudra.sb2004@gmail.com"
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=rudra.sb2004@gmail.com"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block px-8 py-4 bg-cyan-400 text-black font-semibold rounded-xl hover:scale-105 transition"
         >
           Email Me
@@ -76,7 +79,7 @@ export default function Contact() {
           </a>
 
           <a
-            href="https://leetcode.com/u/RudraSB2004/"
+            href="https://leetcode.com/u/Rudra121/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-cyan-400 transition"
@@ -85,8 +88,6 @@ export default function Contact() {
             <p className="mt-2 text-sm">LeetCode</p>
           </a>
         </div>
-
-        {/* LeetCode Stats */}
       </div>
     </section>
   );
